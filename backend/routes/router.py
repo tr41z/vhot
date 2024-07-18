@@ -28,8 +28,8 @@ def create_event():
         # Extract data from request JSON and sanitize
         title = bleach.clean(data.get('title'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
         content = bleach.clean(data.get('content'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-        upvote_count = data.get('upvote_count', 0)
-        downvote_count = data.get('downvote_count', 0)
+        like_count = data.get('like_count', 0)
+        dislike_count = data.get('dislike_count', 0)
         comments_data = data.get('comments', [])
         media_data = data.get('media', [])
         
@@ -50,8 +50,8 @@ def create_event():
         event = Event(
             title=title,
             content=content,
-            upvote_count=upvote_count,
-            downvote_count=downvote_count,
+            like_count=like_count,
+            dislike_count=dislike_count,
             comments=comments,
             media=media
         )
@@ -82,8 +82,8 @@ def update_event(event_id):
         # Extract data from request JSON and sanitize
         title = bleach.clean(data.get('title'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
         content = bleach.clean(data.get('content'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-        upvote_count = data.get('upvote_count', 0)
-        downvote_count = data.get('downvote_count', 0)
+        like_count = data.get('like_count', 0)
+        dislike_count = data.get('dislike_count', 0)
         comments_data = data.get('comments', [])
         media_data = data.get('media', [])
         
@@ -105,8 +105,8 @@ def update_event(event_id):
         event.update(
             title=title,
             content=content,
-            upvote_count=upvote_count,
-            downvote_count=downvote_count,
+            like_count=like_count,
+            dislike_count=dislike_count,
             comments=comments,
             media=media
         )
@@ -122,7 +122,7 @@ def update_event(event_id):
 def like_event(event_id):
     try:
         event = Event.objects.get(id=event_id)
-        event.upvote_count += 1
+        event.like_count += 1
         event.save()
         
         return jsonify({"message": "Liked successfully!"})
@@ -135,7 +135,7 @@ def like_event(event_id):
 def remove_like(event_id):
     try:
         event = Event.objects.get(id=event_id)
-        event.upvote_count -= 1
+        event.like_count -= 1
         event.save()
         
         return jsonify({"message": "Removed like successfully!"})
@@ -143,3 +143,29 @@ def remove_like(event_id):
         return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
     except Exception as e:
         return jsonify({"message", f"Failed to remove like from event! {str(e)}"})
+    
+@router_blueprint.route('/dislike_event/<string:event_id>', methods=['PUT'])
+def dislike_event(event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+        event.dislike_count += 1
+        event.save()
+        
+        return jsonify({"message": "Disliked successfully!"})
+    except Event.DoesNotExist:
+        return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
+    except Exception as e:
+        return jsonify({"message", f"Failed to dislike event! {str(e)}"})
+    
+@router_blueprint.route('/remove_dislike/<string:event_id>', methods=['PUT'])
+def remove_dislike(event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+        event.dislike_count -= 1
+        event.save()
+        
+        return jsonify({"message": "Removed dislike successfully!"})
+    except Event.DoesNotExist:
+        return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
+    except Exception as e:
+        return jsonify({"message", f"Failed to remove dislike from event! {str(e)}"})
