@@ -169,3 +169,27 @@ def remove_dislike(event_id):
         return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
     except Exception as e:
         return jsonify({"message", f"Failed to remove dislike from event! {str(e)}"})
+    
+# --------------------------------------------------------------- COMMENTS ROUTES -----------------------------------------------------------------
+@router_blueprint.route('/add_comment/<string:event_id>', methods=['POST'])
+def add_comment(event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+        data = request.get_json()
+
+        # Extract and sanitize comment data
+        comment_content = bleach.clean(data.get('content'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        comment_author = bleach.clean(data.get('author'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        
+        new_comment = Comment(content=comment_content, author=comment_author)
+        
+        # Add the new comment to the event's comments list
+        event.comments.append(new_comment)
+        event.save()
+
+        return jsonify({"message": "Comment added successfully!"}), 200
+
+    except Event.DoesNotExist:
+        return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
+    except Exception as e:
+        return jsonify({"message": f"Failed to add comment! {str(e)}"}), 500
