@@ -38,8 +38,8 @@ class Event(Document):
             'id': str(self.id),
             'title': self.title,
             'content': self.content,
-            'like_count': self.upvote_count,
-            'dislike_count': self.downvote_count,
+            'like_count': self.like_count,
+            'dislike_count': self.dislike_count,
             'media': [{'url': media.url, 'type': media.type} for media in self.media],
             'comments': [comment.to_json() for comment in self.comments]
         }
