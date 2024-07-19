@@ -23,10 +23,14 @@ import {
 
 const Navbar = () => {
   return (
-    <div className="flex items-center justify-center mt-3">
-      <div className="absolute top-5 right-5 h-16 w-16">
+    <div className="flex items-center justify-center mt-5">
+      <div className="absolute top-7 right-10">
         <SignedOut>
-          <SignInButton />
+          <SignInButton>
+            <button className="text-gray-500 hover:text-white backdrop-blur-lg duration-700 uppercase tracking-widest text-sm">
+              Sign In
+            </button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton />
@@ -44,7 +48,7 @@ const Navbar = () => {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Getting Started</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                 {navbarRoutes.map((component) => (
                   <ListItem
                     key={component.title}

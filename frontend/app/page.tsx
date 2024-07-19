@@ -1,11 +1,12 @@
 import React from 'react'
+import HeroStartingPage from '../components/startingPage/hero'
 
-const Page = () => {
+const StartingPage = () => {
   return (
-    <div>
-      HOME PAGE (BEFORE LOGIN)
+    <div className='pt-10'>
+      <HeroStartingPage />
     </div>
-  )
+  );
 }
 
-export default Page
+export default StartingPage;
