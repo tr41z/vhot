@@ -1,31 +1,74 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { dislikeEvent, getEvent, likeEvent, removeDislike, removeLike } from "../../api/api";
 
 const EventDetails = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/api/v1/get_event/${eventId}`
-        );
-        if (!response.ok) {
-          throw new Error("Event not found");
-        }
-        const eventData = await response.json();
+        const eventData = await getEvent(eventId);
         setEvent(eventData);
       } catch (error) {
-        console.error("Error fetching event:", error);
+        console.error("Error fetching event! ", error);
       }
     };
 
     fetchEvent();
   }, [eventId]);
 
+  const handleLike = async () => {
+    try {
+      await likeEvent(eventId);
+
+      const updatedEvent = await getEvent(eventId);
+      setEvent(updatedEvent);
+      setIsLiked(true)
+    } catch (error) {
+      console.error("Error while liking event! ", error);
+    }
+  };
+
+  const handleRemoveLike = async () => {
+    try {
+      await removeLike(eventId);
+
+      const updatedEvent = await getEvent(eventId);
+      setEvent(updatedEvent);
+      setIsLiked(false)
+    } catch (error) {
+      console.error("Error while removing like from event! ", error);
+    }
+  }
+
+  const handleDislike = async () => {
+    try {
+      await dislikeEvent(eventId);
+      const updatedEvent = await getEvent(eventId);
+      setEvent(updatedEvent);
+      setIsDisliked(true);
+    } catch (error) {
+      console.error("Error while disliking event! ", error);
+    }
+  }
+
   if (!event) {
     return <p>No Event Found</p>;
+  }
+
+  const handleRemoveDislike = async () => {
+    try {
+      await removeDislike(eventId)
+      const updatedEvent = await getEvent(eventId);
+      setEvent(updatedEvent)
+      setIsDisliked(false);
+    } catch (error) {
+      console.error("Error while removing dislike from event! ", error);
+    }
   }
 
   return (
@@ -56,6 +99,12 @@ const EventDetails = () => {
           <p>No media available</p>
         )}
       </div>
+      <button onClick={isLiked ? handleRemoveLike : handleLike}>
+        {isLiked ? "Unlike" : "Like"}
+      </button>{" "}
+      <p>Like count: {event.like_count}</p>
+      <button onClick={isDisliked ? handleRemoveDislike : handleDislike}>{isDisliked ? "Undislike" : "Dislike"}</button>
+      <p>Dislike count: {event.dislike_count}</p>
     </div>
   );
 };
