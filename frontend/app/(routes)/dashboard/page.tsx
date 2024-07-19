@@ -3,7 +3,7 @@ import React from 'react'
 const Home = () => {
   return (
     <div>
-      HOMEPAGE
+      DASHBOARD PAGE (AFTER LOGIN)
     </div>
   )
 }
