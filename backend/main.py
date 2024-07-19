@@ -1,12 +1,12 @@
 from dotenv import load_dotenv
 import os
 
-from routes.config import app
+from config.config import app
 from routes.router import router_blueprint
 from database.db import DB
 
 def main():
-    app.config.from_object('routes.config')
+    app.config.from_object('config.config')
 
     # Initialize DB
     db = DB()
@@ -16,6 +16,7 @@ def main():
     
     try:
         db.connect(os.getenv('MONGODB_URI'))
+        
     except Exception as e:
         print("There was an error in main function: ", str(e))
         

@@ -34,6 +34,28 @@ const EventDetails = () => {
       <p>ID: {eventId}</p>
       <p>Title: {event.title}</p>
       <p>Description: {event.content}</p>
+      <div>
+        <h3>Media:</h3>
+        {event.media && event.media.length > 0 ? (
+          event.media.map((mediaItem, index) => (
+            <div key={index}>
+              {mediaItem.type.startsWith("image/") ? (
+                <img src={mediaItem.url} alt={`Media ${index + 1}`} />
+              ) : (
+                <a
+                  href={mediaItem.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {mediaItem.url}
+                </a>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No media available</p>
+        )}
+      </div>
     </div>
   );
 };

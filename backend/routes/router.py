@@ -1,10 +1,13 @@
 from flask import Blueprint, jsonify, request
 from database.models import Event, Comment, Media
+from routes.helpers import Helpers
 import bleach
+
+helpers = Helpers()
 
 router_blueprint = Blueprint('router', __name__)
 
-# Define allowed tags and attributes for sanitization
+# Allowed tags and attributes for sanitization
 ALLOWED_TAGS = []
 ALLOWED_ATTRIBUTES = {}
 
@@ -23,30 +26,39 @@ def get_event(event_id):
 @router_blueprint.route('/create_event', methods=['POST'])
 def create_event():
     try:
-        data = request.get_json()
+        data = request.form
         
-        # Extract data from request JSON and sanitize
-        title = bleach.clean(data.get('title'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-        content = bleach.clean(data.get('content'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-        like_count = data.get('like_count', 0)
-        dislike_count = data.get('dislike_count', 0)
-        comments_data = data.get('comments', [])
-        media_data = data.get('media', [])
+        # Extract data from request form and sanitize
+        title = bleach.clean(data.get('title', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        content = bleach.clean(data.get('content', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+        like_count = int(data.get('like_count', 0))
+        dislike_count = int(data.get('dislike_count', 0))
+        comments_data = request.form.get('comments', '[]')
         
+        # Convert comments_data to list if it's not already
+        try:
+            comments_data = eval(comments_data) if isinstance(comments_data, str) else comments_data
+        except:
+            comments_data = []
+
+        # Handle comments
         comments = []
         for comment_data in comments_data:
-            comment_content = bleach.clean(comment_data.get('content'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-            comment_author = bleach.clean(comment_data.get('author'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+            comment_content = bleach.clean(comment_data.get('content', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
+            comment_author = bleach.clean(comment_data.get('author', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
             comment = Comment(content=comment_content, author=comment_author)
             comments.append(comment)
-            
+        
+        # Handle media uploads
         media = []
-        for media_item in media_data:
-            media_url = bleach.clean(media_item.get('url'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-            media_type = bleach.clean(media_item.get('type'), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
-            media_obj = Media(url=media_url, type=media_type)
-            media.append(media_obj)
-            
+        if 'media' in request.files:
+            files = request.files.getlist('media')
+            for file in files:
+                upload_result = helpers.upload_media(file)
+                media_obj = Media(url=upload_result['url'], type=file.content_type)
+                media.append(media_obj)
+
+        # Create event
         event = Event(
             title=title,
             content=content,
