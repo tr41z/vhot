@@ -1,30 +1,31 @@
 from dotenv import load_dotenv
 import os
-
 from config.config import app
 from routes.router import router_blueprint
 from database.db import DB
+import logging
 
-def main():
-    app.config.from_object('config.config')
-
-    # Initialize DB
-    db = DB()
-    
-    # Load .env and connect to database
+def create_app():
+    # Load environment variables
     load_dotenv()
     
+    # Configure the app
+    app.config.from_object('config.config')
+
+    # Initialize and connect to the database
+    db = DB()
     try:
         db.connect(os.getenv('MONGODB_URI'))
-        
     except Exception as e:
-        print("There was an error in main function: ", str(e))
-        
+        logging.error("There was an error in main function: %s", str(e))
+        raise
+
     # Register blueprints
     app.register_blueprint(router_blueprint, url_prefix='/api/v1')
 
     return app
 
+app = create_app()
+
 if __name__ == '__main__':
-    app = main()
-    app.run(debug=True, port=3001)
+    app.run(debug=False)  

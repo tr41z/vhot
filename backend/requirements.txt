@@ -4,3 +4,4 @@ python-dotenv
 mongoengine
 Flask-Cors
 bleach
+gunicorn
