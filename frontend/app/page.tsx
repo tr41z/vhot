@@ -40,7 +40,7 @@ const LandingPage = () => {
               </button>
             </a>
             <a
-              href="/dashboard"
+              href="/room/create"
               className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-slate-500 hover:bg-slate-400 text-white uppercase tracking-wide font-light text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 duration-300"
             >
               Get Started

@@ -41,7 +41,7 @@ const MobileSidebar = () => {
             </SheetTitle>
             <SheetDescription>
               <div className="flex flex-wrap w-full justify-center text-black">
-                <StyledLink href="/dashboard" text="Dashboard" />
+                <StyledLink href="/" text="Home" />
                 <StyledLink href="/about" text="About Us" />
                 <StyledLink href="/room/link" text="Join Room" />
                 <StyledLink href="/room/create" text="Create Room" />
