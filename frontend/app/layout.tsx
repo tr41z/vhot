@@ -20,7 +20,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className}`}>
-          <div className="absolute top-0 z-[-2] h-screen w-screen bg-gray-950 bg-[radial-gradient(ellipse_60%_80%_at_50%_-20%,rgba(135,206,220,0.3),rgba(255,255,255,0))]"></div>
+          <div className="absolute top-0 z-[-2] h-screen w-screen rotate-180 transform bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(125,205,238,.4)_100%)]"></div>{" "}
           <Navbar />
           {children}
         </body>

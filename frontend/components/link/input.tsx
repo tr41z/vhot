@@ -13,7 +13,9 @@ export function InputWithButton() {
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const url = `http://localhost:3000/event/${encodeURIComponent(inputValue)}`;
+    const url = `${process.env.NEXT_PUBLIC_EVENT_URL}/${encodeURIComponent(
+      inputValue
+    )}`;
     window.location.href = url;
   };
 

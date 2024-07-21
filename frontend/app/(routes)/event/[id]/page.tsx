@@ -8,6 +8,7 @@ interface Event {
   content: string;
   like_count: number;
   dislike_count: number;
+  media: any;
 }
 
 const EventPage = ({ params }: { params: { id: string } }) => {
@@ -17,7 +18,9 @@ const EventPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchEventData = async () => {
-      const res = await fetch(`http://localhost:3001/api/v1/get_event/${id}`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/get_event/${id}`
+      );
       if (!res.ok) {
         notFound();
         return;
@@ -40,10 +43,9 @@ const EventPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="text-white">
-      <h1>{event.title}</h1>
-      <p>{event.content}</p>
-      <p>Likes: {event.like_count}</p>
-      <p>Dislikes: {event.dislike_count}</p>
+        {event.media.map((media: any) => (
+            <img src={media.url} alt={event.title} />
+        ))}
     </div>
   );
 };

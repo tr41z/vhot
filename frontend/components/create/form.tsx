@@ -33,7 +33,7 @@ const formSchema = z.object({
   content: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
-  media: z.any(), // We'll handle the file validation separately
+  media: z.any(),
 });
 
 export function CreateForm() {
@@ -67,14 +67,19 @@ export function CreateForm() {
         formData.append("media", fileInputRef.current.files[0]);
       }
 
-      const response = await fetch("http://localhost:3001/api/v1/create_event", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/create_event`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
-       throw new Error("Error creating form!");
+        throw new Error("Error creating form!");
       }
+
+      const resData = await response.json();
 
       form.reset();
       toast({
@@ -82,6 +87,10 @@ export function CreateForm() {
         description: "Form submitted successfully.",
         duration: 5000,
       });
+      await new Promise((r) => setTimeout(r, 2000));
+
+      // Redirect to the event page
+      window.location.href = `${process.env.NEXT_PUBLIC_EVENT_URL}/${resData.event_id}`;
     } catch (error) {
       console.error("Error when creating form!", error);
       toast({
@@ -99,7 +108,7 @@ export function CreateForm() {
       <DialogTrigger asChild>
         <div className="flex justify-center items-center w-full">
           <Button
-            className="w-full rounded-lg bg-slate-600 h-9 hover:bg-gray-400 hover:text-slate-900 transition ease-in-out duration-150 uppercase tracking-widest font-light border-none mt-2"
+            className="w-full rounded-lg bg-slate-600 h-9 hover:bg-gray-400 text-white hover:text-slate-900 transition ease-in-out duration-150 uppercase tracking-widest font-light border-none mt-2"
             variant="outline"
           >
             Create Room
@@ -108,9 +117,9 @@ export function CreateForm() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Contact Me</DialogTitle>
+          <DialogTitle>Create Room!</DialogTitle>
           <DialogDescription>
-            Fill in the fields and send me an email!
+            Fill in the fields and submit to create a voting room.
           </DialogDescription>
         </DialogHeader>
 
@@ -160,7 +169,28 @@ export function CreateForm() {
                 )}
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
-                Submit
+                {isLoading ? (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.963 7.963 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </form>
           </div>
