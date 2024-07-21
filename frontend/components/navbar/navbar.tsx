@@ -42,7 +42,7 @@ const Navbar = () => {
       <div className="absolute top-7 right-10">
         <SignedOut>
           <SignInButton>
-            <button className="text-gray-500 hover:text-white backdrop-blur-lg duration-700 uppercase tracking-widest text-sm">
+            <button className="text-gray-800 hover:text-gray-400 backdrop-blur-lg duration-300 uppercase tracking-widest text-sm">
               Sign In
             </button>
           </SignInButton>
