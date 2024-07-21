@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 interface Event {
   title: string;
@@ -43,9 +44,15 @@ const EventPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="text-white">
-        {event.media.map((media: any) => (
-            <img src={media.url} alt={event.title} />
-        ))}
+      {event.media.map((media: any, index: number) => (
+        <Image
+          key={index} 
+          src={media.url}
+          alt={event.title}
+          width={500}
+          height={300}
+        />
+      ))}
     </div>
   );
 };
