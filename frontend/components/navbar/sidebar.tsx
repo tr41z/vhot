@@ -23,16 +23,16 @@ const MobileSidebar = () => {
     <div className="absolute left-5 top-5">
       <Sheet>
         <SheetTrigger>
-          <Button variant="ghost" size="icon" className="md:hidden text-white">
+          <Button variant="ghost" size="icon" className="md:hidden text-black">
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent side={"top"} className="bg-[#000000] ">
+        <SheetContent side={"top"}>
           <SheetHeader>
             <SheetTitle>
               <div
                 className={cn(
-                  "flex w-full justify-center text-white text-muted",
+                  "flex w-full justify-center",
                   font.className
                 )}
               >
@@ -40,7 +40,7 @@ const MobileSidebar = () => {
               </div>
             </SheetTitle>
             <SheetDescription>
-              <div className="flex flex-wrap w-full justify-center text-gray-300">
+              <div className="flex flex-wrap w-full justify-center text-black">
                 <StyledLink href="/dashboard" text="Dashboard" />
                 <StyledLink href="/about" text="About Us" />
                 <StyledLink href="/room/link" text="Join Room" />
