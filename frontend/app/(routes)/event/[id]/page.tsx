@@ -1,15 +1,20 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+
+interface Media {
+  url: string;
+  type: string;
+}
 
 interface Event {
   title: string;
   content: string;
   like_count: number;
   dislike_count: number;
-  media: any;
+  media: Media[];
 }
 
 const EventPage = ({ params }: { params: { id: string } }) => {
@@ -19,16 +24,21 @@ const EventPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const fetchEventData = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/get_event/${id}`
-      );
-      if (!res.ok) {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/get_event/${id}`
+        );
+        if (!res.ok) {
+          notFound();
+          return;
+        }
+        const data = await res.json();
+        setEvent(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching event data:", error);
         notFound();
-        return;
       }
-      const data = await res.json();
-      setEvent(data);
-      setLoading(false);
     };
 
     fetchEventData();
@@ -44,15 +54,23 @@ const EventPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="text-white">
-      {event.media.map((media: any, index: number) => (
-        <Image
-          key={index} 
-          src={media.url}
-          alt={event.title}
-          width={600}
-          height={300}
-        />
-      ))}
+      {event.media.length > 0 ? (
+        event.media.map((media, index) => (
+          <div key={index}>
+            <Image
+              src={media.url}
+              alt={event.title || "Event Image"}
+              width={600}
+              height={300}
+              onError={() =>
+                console.error(`Failed to load image: ${media.url}`)
+              }
+            />
+          </div>
+        ))
+      ) : (
+        <div>No media available</div>
+      )}
     </div>
   );
 };
