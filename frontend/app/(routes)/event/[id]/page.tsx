@@ -49,7 +49,7 @@ const EventPage = ({ params }: { params: { id: string } }) => {
           key={index} 
           src={media.url}
           alt={event.title}
-          width={500}
+          width={600}
           height={300}
         />
       ))}
