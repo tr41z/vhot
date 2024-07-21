@@ -6,7 +6,7 @@ const LandingPage = () => {
       <div>
         <div className="flex flex-col items-center max-w-2xl mt-40">
           <h2 className="bg-gradient-to-r from-gray-800 via-gray-600 to-gray-500 bg-clip-text text-transparent text-3xl md:text-5xl leading-tight uppercase tracking-wide">
-            Best Voting Platform,
+            Best Voting Platform
             <span className="flex justify-center text-base md:text-3xl uppercase mt-3">
               For Feedback & Engagement
             </span>
