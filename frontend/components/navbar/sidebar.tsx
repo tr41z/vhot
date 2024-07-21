@@ -27,7 +27,7 @@ const MobileSidebar = () => {
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent side={"top"} className="bg-[#212529] ">
+        <SheetContent side={"top"} className="bg-[#000000] ">
           <SheetHeader>
             <SheetTitle>
               <div
