@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import { CarouselComponent } from "@/components/event/carousel";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface Media {
   url: string;
@@ -44,6 +45,24 @@ const EventPage = ({ params }: { params: { id: string } }) => {
     fetchEventData();
   }, [id]);
 
+  const handleLike = () => {
+    if (event) {
+      setEvent({
+        ...event,
+        like_count: event.like_count + 1,
+      });
+    }
+  };
+
+  const handleDislike = () => {
+    if (event) {
+      setEvent({
+        ...event,
+        dislike_count: event.dislike_count + 1,
+      });
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -53,28 +72,30 @@ const EventPage = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div>
-      <p>{event.title}</p>
-      <p>{event.content}</p>
-      <p>{event.like_count}</p>
-      <p>{event.dislike_count}</p>
-      {event.media.length > 0 ? (
-        event.media.map((media, index) => (
-          <div key={index}>
-            <Image
-              src={media.url}
-              alt={event.title || "Event Image"}
-              width={400}
-              height={300}
-              onError={() =>
-                console.error(`Failed to load image: ${media.url}`)
-              }
-            />
+    <div className="p-4">
+      <div className="flex flex-col justify-center items-center mt-10">
+        <div className="text-center uppercase tracking-wider font-light mb-4">
+          <p className="text-lg md:text-xl lg:text-2xl">{event.title}</p>
+          <p className="text-sm md:text-base lg:text-lg">{event.content}</p>
+        </div>
+        <div className="flex flex-col justify-around items-center w-full">
+          <CarouselComponent />
+          <div className="flex justify-between w-full items-center mt-10 space-x-4">
+            <button
+              onClick={handleLike}
+              className="flex justify-center bg-slate-500 hover:bg-slate-400 duration-300 text-white px-4 py-2 rounded-xl w-1/2"
+            >
+              <ChevronUp />
+            </button>
+            <button
+              onClick={handleDislike}
+              className="flex justify-center bg-red-500 hover:bg-red-400 duration-300 text-white px-4 py-2 rounded-xl w-1/2"
+            >
+              <ChevronDown />
+            </button>
           </div>
-        ))
-      ) : (
-        <div>No media available</div>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
