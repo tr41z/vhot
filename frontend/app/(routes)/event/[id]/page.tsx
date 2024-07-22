@@ -53,14 +53,18 @@ const EventPage = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="text-white">
+    <div>
+      <p>{event.title}</p>
+      <p>{event.content}</p>
+      <p>{event.like_count}</p>
+      <p>{event.dislike_count}</p>
       {event.media.length > 0 ? (
         event.media.map((media, index) => (
           <div key={index}>
             <Image
               src={media.url}
               alt={event.title || "Event Image"}
-              width={600}
+              width={400}
               height={300}
               onError={() =>
                 console.error(`Failed to load image: ${media.url}`)
