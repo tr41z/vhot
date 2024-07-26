@@ -26,7 +26,7 @@ export function InputWithButton() {
     >
       <Input
         type="text"
-        placeholder="Enter event link..."
+        placeholder="Enter event ID..."
         id="event_id"
         value={inputValue}
         onChange={handleInputChange}

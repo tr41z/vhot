@@ -1,7 +1,7 @@
 import { InputWithButton } from "@/components/link/input";
 import React from "react";
 
-const JoinFromLinkPage = () => {
+const JoinFromIdPage = () => {
   return (
     <div className="flex flex-col justify-center items-center h-[75vh]">
       <div className="flex flex-col justify-center items-center">
@@ -19,4 +19,4 @@ const JoinFromLinkPage = () => {
   );
 };
 
-export default JoinFromLinkPage;
+export default JoinFromIdPage;
