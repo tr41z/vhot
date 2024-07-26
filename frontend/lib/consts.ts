@@ -4,9 +4,9 @@ export const navbarRoutes: {
   description: string;
 }[] = [
   {
-    title: "Join From Link",
+    title: "Join With ID",
     href: "/room/link",
-    description: "Join to a voting room by providing a link to the room.",
+    description: "Join to a voting room by providing an ID of the room.",
   },
   {
     title: "Create Voting Room",
