@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { CarouselComponent } from "@/components/event/carousel";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import LoadingSpinner from "../../../../components/loading/spinner";
 
 interface Media {
   url: string;
@@ -202,7 +203,7 @@ const EventPage = ({ params }: { params: { id: string } }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (!event) {
