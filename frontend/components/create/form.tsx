@@ -175,7 +175,7 @@ export function CreateForm() {
                         onChange={handleFileChange}
                       />
                     </FormControl>
-                    <p className="ml-1 text-xs text-muted text-gray-400">maximum 5 files allowed</p>
+                    <p className="ml-1 text-xs opacity-90 text-gray-500">maximum 5 files allowed</p>
                     <FormMessage />
                   </FormItem>
                 )}
