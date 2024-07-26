@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import React, { useRef } from "react";
-import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -33,22 +32,34 @@ const formSchema = z.object({
   content: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
-  media: z.any(),
+  media: z.array(z.any()).optional(),
 });
 
 export function CreateForm() {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [fileError, setFileError] = React.useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       content: "",
-      media: null,
+      media: [],
     },
   });
+
+  const handleFileChange = () => {
+    if (fileInputRef.current) {
+      const files = fileInputRef.current.files;
+      if (files && files.length > 5) {
+        setFileError("You can only upload up to 5 files.");
+        fileInputRef.current.value = ""; 
+      } else {
+        setFileError(null);
+      }
+    }
+  };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -58,13 +69,15 @@ export function CreateForm() {
       formData.append("title", data.title);
       formData.append("content", data.content);
 
-      // Check if file input has a file
+      // Check if file input has files
       if (
         fileInputRef.current &&
         fileInputRef.current.files &&
         fileInputRef.current.files.length > 0
       ) {
-        formData.append("media", fileInputRef.current.files[0]);
+        Array.from(fileInputRef.current.files).forEach((file) => {
+          formData.append("media", file);
+        });
       }
 
       const response = await fetch(
@@ -82,22 +95,14 @@ export function CreateForm() {
       const resData = await response.json();
 
       form.reset();
-      toast({
-        title: "Success",
-        description: "Form submitted successfully.",
-        duration: 5000,
-      });
+
+      // Wait for 2 seconds before redirecting
       await new Promise((r) => setTimeout(r, 2000));
 
       // Redirect to the event page
       window.location.href = `${process.env.NEXT_PUBLIC_EVENT_URL}/${resData.event_id}`;
     } catch (error) {
       console.error("Error when creating form!", error);
-      toast({
-        title: "Error",
-        description: "Error creating form. Please try again later.",
-        duration: 5000,
-      });
     } finally {
       setIsLoading(false);
     }
@@ -160,10 +165,17 @@ export function CreateForm() {
                 name="media"
                 render={() => (
                   <FormItem>
-                    <FormLabel>Content</FormLabel>
+                    <FormLabel>Media</FormLabel>
                     <FormControl>
-                      <Input id="media" type="file" ref={fileInputRef} />
+                      <Input
+                        id="media"
+                        type="file"
+                        ref={fileInputRef}
+                        multiple 
+                        onChange={handleFileChange}
+                      />
                     </FormControl>
+                    <p className="ml-1 text-xs text-muted text-gray-400">maximum 5 files allowed</p>
                     <FormMessage />
                   </FormItem>
                 )}
