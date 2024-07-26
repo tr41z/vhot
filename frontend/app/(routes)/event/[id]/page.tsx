@@ -214,8 +214,8 @@ const EventPage = ({ params }: { params: { id: string } }) => {
     <div className="p-4">
       <div className="flex flex-col justify-center items-center mt-10">
         <div className="text-center uppercase tracking-wider font-light mb-4">
-          <p className="text-lg md:text-xl lg:text-2xl">{event.title}</p>
-          <p className="text-sm md:text-base lg:text-lg">{event.content}</p>
+          <p className="text-xl md:text-2xl lg:text-3xl">{event.title}</p>
+          <p className="text-base md:text-xl lg:text-2xl">{event.content}</p>
         </div>
         <div className="flex flex-col justify-around items-center w-full">
           <CarouselComponent media={event.media} />
