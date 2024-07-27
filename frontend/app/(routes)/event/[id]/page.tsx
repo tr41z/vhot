@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { CarouselComponent } from "@/components/event/carousel";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import LoadingSpinner from "../../../../components/loading/spinner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Media {
   url: string;
@@ -33,6 +35,8 @@ const EventPage = ({ params }: { params: { id: string } }) => {
           `${process.env.NEXT_PUBLIC_API_URL}/get_event/${id}`
         );
         if (!res.ok) {
+          const errorText = await res.text();
+          console.error(`API error: ${errorText}`);
           notFound();
           return;
         }
@@ -58,6 +62,24 @@ const EventPage = ({ params }: { params: { id: string } }) => {
 
     fetchEventData();
   }, [id]);
+
+  const addComment = async (content: string, author: string) => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/add_comment/${id}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          'content': content,
+          'author': author
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error("There was an error with network during adding comment!")
+      }
+    } catch(error) {
+      console.error("There was an error with adding comment! ", error)
+    }
+  }
 
   const handleLike = async () => {
     if (isLiked) {
@@ -242,6 +264,11 @@ const EventPage = ({ params }: { params: { id: string } }) => {
               {event.dislike_count}
               <ChevronDown />
             </button>
+          </div>
+          <div className="flex mt-8 w-full gap-4">
+            <p className="uppercase font-light">comment this work!</p>
+            <Input type="text" placeholder="Add a comment..." id="commentText"/>
+            <Button type="submit" >Create</Button>
           </div>
         </div>
       </div>

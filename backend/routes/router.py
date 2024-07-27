@@ -205,3 +205,24 @@ def add_comment(event_id):
         return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
     except Exception as e:
         return jsonify({"message": f"Failed to add comment! {str(e)}"}), 500
+    
+@router_blueprint.route('/delete_comment/<string:event_id>/<string:comment_id>', methods=['DELETE'])
+def remove_comment(event_id, comment_id):
+    try:
+        # Find the event by event_id
+        event = Event.objects.get(id=event_id)
+        
+        # Find and remove the comment from the event's comments list
+        comment_to_remove = next((comment for comment in event.comments if str(comment.id) == comment_id), None)
+        
+        if comment_to_remove:
+            event.comments.remove(comment_to_remove)
+            event.save()
+            return jsonify({"message": "Comment deleted successfully!"}), 200
+        else:
+            return jsonify({"message": f"Comment with id {comment_id} does not exist"}), 404
+        
+    except Event.DoesNotExist:
+        return jsonify({"message": f"Event with id {event_id} does not exist"}), 404
+    except Exception as e:
+        return jsonify({"message": f"Failed to remove comment! {str(e)}"}), 500

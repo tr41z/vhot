@@ -13,12 +13,14 @@ class Media(EmbeddedDocument):
     type = StringField(max_length=50, required=True) 
 
 class Comment(EmbeddedDocument):
+    id = UUIDField(primary_key=True)
     content = StringField(max_length=300, required=True)
     author = StringField(max_length=100, required=True)
     created_at = DateTimeField(default=datetime.now)
     
     def to_json(self):
         return {
+            'id': str(self.id),
             'content': self.content,
             'author': self.author,
             'created_at': self.created_at
