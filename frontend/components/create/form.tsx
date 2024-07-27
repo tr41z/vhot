@@ -32,7 +32,9 @@ const formSchema = z.object({
   content: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
-  media: z.array(z.any()).optional(),
+  media: z.array(z.any()).min(1, {
+    message: "At least one file is required!",
+  }),
 });
 
 export function CreateForm() {
@@ -54,9 +56,12 @@ export function CreateForm() {
       const files = fileInputRef.current.files;
       if (files && files.length > 5) {
         setFileError("You can only upload up to 5 files.");
-        fileInputRef.current.value = ""; 
+        fileInputRef.current.value = "";
       } else {
         setFileError(null);
+        if (files) {
+          form.setValue("media", Array.from(files));
+        }
       }
     }
   };
@@ -69,13 +74,8 @@ export function CreateForm() {
       formData.append("title", data.title);
       formData.append("content", data.content);
 
-      // Check if file input has files
-      if (
-        fileInputRef.current &&
-        fileInputRef.current.files &&
-        fileInputRef.current.files.length > 0
-      ) {
-        Array.from(fileInputRef.current.files).forEach((file) => {
+      if (data.media && data.media.length > 0) {
+        data.media.forEach((file) => {
           formData.append("media", file);
         });
       }
@@ -96,10 +96,8 @@ export function CreateForm() {
 
       form.reset();
 
-      // Wait for 2 seconds before redirecting
       await new Promise((r) => setTimeout(r, 2000));
 
-      // Redirect to the event page
       window.location.href = `${process.env.NEXT_PUBLIC_EVENT_URL}/${resData.event_id}`;
     } catch (error) {
       console.error("Error when creating form!", error);
@@ -171,11 +169,19 @@ export function CreateForm() {
                         id="media"
                         type="file"
                         ref={fileInputRef}
-                        multiple 
+                        multiple
                         onChange={handleFileChange}
+                        className="cursor-pointer"
                       />
                     </FormControl>
-                    <p className="ml-1 text-xs opacity-90 text-gray-500">maximum 5 files allowed</p>
+                    <p className="ml-1 text-xs opacity-90 text-gray-500">
+                      maximum 5 files allowed
+                    </p>
+                    {fileError && (
+                      <p className="ml-1 text-xs opacity-90 text-red-500">
+                        {fileError}
+                      </p>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}
