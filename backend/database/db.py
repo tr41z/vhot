@@ -1,4 +1,4 @@
-from mongoengine import connect, ConnectionError
+from mongoengine import connect, ConnectionFailure
 
 class DB:
     """
@@ -21,7 +21,7 @@ class DB:
     def connect(self, DB_URI):
         try:
             connect(self.db_name, host=DB_URI)
-        except ConnectionError as e:
+        except ConnectionFailure as e:
             print(f"Failed to connect to the database: {e}")
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
