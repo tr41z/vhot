@@ -28,20 +28,17 @@ def create_event():
     try:
         data = request.form
         
-        # Extract data from request form and sanitize
         title = bleach.clean(data.get('title', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
         content = bleach.clean(data.get('content', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
         like_count = int(data.get('like_count', 0))
         dislike_count = int(data.get('dislike_count', 0))
         comments_data = request.form.get('comments', '[]')
         
-        # Convert comments_data to list if it's not already
         try:
             comments_data = eval(comments_data) if isinstance(comments_data, str) else comments_data
         except:
             comments_data = []
 
-        # Handle comments
         comments = []
         for comment_data in comments_data:
             comment_content = bleach.clean(comment_data.get('content', ''), tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES)
@@ -49,7 +46,6 @@ def create_event():
             comment = Comment(content=comment_content, author=comment_author)
             comments.append(comment)
         
-        # Handle media uploads
         media = []
         if 'media' in request.files:
             files = request.files.getlist('media')
@@ -58,7 +54,6 @@ def create_event():
                 media_obj = Media(url=upload_result['url'], type=file.content_type)
                 media.append(media_obj)
 
-        # Create event
         event = Event(
             title=title,
             content=content,
