@@ -5,3 +5,4 @@ mongoengine
 Flask-Cors
 bleach
 gunicorn
+logging

@@ -14,7 +14,7 @@ ALLOWED_ATTRIBUTES = {}
 # ------------------------------------------------------------------ EVENT ROUTES ------------------------------------------------------------------
 
 @router_blueprint.route('/get_event/<string:event_id>', methods=['GET'])
-def get_event(event_id):
+def get_event(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         return jsonify(event.to_json()), 200
@@ -70,7 +70,7 @@ def create_event():
         return jsonify({"message": f"Failed to create an event! {str(e)}"}), 500
 
 @router_blueprint.route('/delete_event/<string:event_id>', methods=['DELETE'])
-def delete_event(event_id):
+def delete_event(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         event.delete()
@@ -81,7 +81,7 @@ def delete_event(event_id):
         return jsonify({"message": f"Failed to delete event! {str(e)}"}), 500
 
 @router_blueprint.route('/update_event/<string:event_id>', methods=['PUT'])
-def update_event(event_id):
+def update_event(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         data = request.get_json()
@@ -126,7 +126,7 @@ def update_event(event_id):
     
 # ---------------------------------------------------------------- REACTION ROUTES -----------------------------------------------------------------
 @router_blueprint.route('/like_event/<string:event_id>', methods=['PUT'])
-def like_event(event_id):
+def like_event(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         event.like_count += 1
@@ -139,7 +139,7 @@ def like_event(event_id):
         return jsonify({"message", f"Failed to like event! {str(e)}"})
     
 @router_blueprint.route('/remove_like/<string:event_id>', methods=['PUT'])
-def remove_like(event_id):
+def remove_like(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         event.like_count -= 1
@@ -152,7 +152,7 @@ def remove_like(event_id):
         return jsonify({"message", f"Failed to remove like from event! {str(e)}"})
     
 @router_blueprint.route('/dislike_event/<string:event_id>', methods=['PUT'])
-def dislike_event(event_id):
+def dislike_event(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         event.dislike_count += 1
@@ -165,7 +165,7 @@ def dislike_event(event_id):
         return jsonify({"message", f"Failed to dislike event! {str(e)}"})
     
 @router_blueprint.route('/remove_dislike/<string:event_id>', methods=['PUT'])
-def remove_dislike(event_id):
+def remove_dislike(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         event.dislike_count -= 1
@@ -179,7 +179,7 @@ def remove_dislike(event_id):
     
 # --------------------------------------------------------------- COMMENTS ROUTES -----------------------------------------------------------------
 @router_blueprint.route('/add_comment/<string:event_id>', methods=['POST'])
-def add_comment(event_id):
+def add_comment(event_id: str):
     try:
         event = Event.objects.get(id=event_id)
         data = request.get_json()
@@ -202,7 +202,7 @@ def add_comment(event_id):
         return jsonify({"message": f"Failed to add comment! {str(e)}"}), 500
     
 @router_blueprint.route('/delete_comment/<string:event_id>/<string:comment_id>', methods=['DELETE'])
-def remove_comment(event_id, comment_id):
+def remove_comment(event_id: str, comment_id: str):
     try:
         # Find the event by event_id
         event = Event.objects.get(id=event_id)
