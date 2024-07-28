@@ -1,13 +1,13 @@
-from mongoengine import connect
+from mongoengine import connect, ConnectionError
 
 class DB:
     """
-    The DB object initializes connection with database for app development.
+    The DB object initializes connection with the database for app development.
     
     Initializers:
         - host (default: localhost)
         - port (default: 27017)
-        - db_name (flask_db)
+        - db_name (vhost_db)
     
     Usage:
         from db import DB
@@ -19,5 +19,9 @@ class DB:
         self.db_name = db_name
 
     def connect(self, DB_URI):
-        connect(self.db_name, host=DB_URI)
-        print("Successfully connected to MongoDB!")
+        try:
+            connect(self.db_name, host=DB_URI)
+        except ConnectionError as e:
+            print(f"Failed to connect to the database: {e}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
