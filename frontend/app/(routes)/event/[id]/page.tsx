@@ -265,13 +265,13 @@ const EventPage = ({ params }: { params: { id: string } }) => {
               <ChevronDown />
             </button>
           </div>
-          <div className="flex flex-col mt-10 w-1/3 gap-4">
+          {/* <div className="flex flex-col mt-10 w-1/3 gap-4">
             <p className="uppercase font-light text-xl text-center">
               Give some feedback!
             </p>
             <Input type="text" placeholder="Add a comment..." id="commentText"/>
             <Button type="submit" >Create</Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
