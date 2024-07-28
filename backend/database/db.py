@@ -1,4 +1,7 @@
 from mongoengine import connect, ConnectionFailure
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class DB:
     """
@@ -22,6 +25,8 @@ class DB:
         try:
             connect(self.db_name, host=DB_URI)
         except ConnectionFailure as e:
-            print(f"Failed to connect to the database: {e}")
+            logging.error(f"Failed to connect to the database: {e}")
+            raise
         except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+            logging.error(f"An unexpected error occurred: {e}")
+            raise
